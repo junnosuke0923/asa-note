@@ -2,7 +2,10 @@
 
 毎朝の基礎体温を、やさしく記録するアプリ。
 
-使いかたは [はじめにお読みください.txt](はじめにお読みください.txt) を見てください。
+スマホでは、ここから直接ひらけます（ホーム画面に追加すると、アイコンから起動できます）。
+→ https://junnosuke0923.github.io/asa-note/
+
+パソコンでの使いかたは [はじめにお読みください.txt](はじめにお読みください.txt) を見てください。
 番号のついた `.bat` をダブルクリックするだけで開きます。
 
 ---
@@ -17,7 +20,8 @@
 | `npm run build` | 本番用に組み立てる |
 | `npm run preview` | 組み立てたものを確認する |
 | `npm run lint` | 書き方の点検 |
-| `node scripts/bundle-artifact.mjs` | 1枚のHTMLにまとめる（公開用） |
+| `node scripts/bundle-artifact.mjs` | 1枚のHTMLにまとめる（Artifact公開用） |
+| `npm run deploy` | 今のコードを、スマホ用の公開URLに反映する |
 
 ### 設計のメモ
 
