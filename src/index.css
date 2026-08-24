@@ -140,7 +140,7 @@ body {
  * 実機（とくにホーム画面に追加したとき）は、上のノッチと
  * 下のホームバーに画面が隠れる。その分だけ内側に寄せる。
  */
-@media (max-width: 767px) {
+@media screen and (max-width: 767px) {
   .phone-screen {
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
@@ -149,28 +149,35 @@ body {
   }
 
   /*
-   * 実機での高さは 100vh ではなく 100dvh に合わせる。
+   * 実機では、画面そのものに ぴたりと貼りつける。
    *
-   * 100vh は「ブラウザのアドレスバーが隠れたときの高さ」なので、
-   * バーが出ている あいだは そのぶん画面からはみ出す。
-   * 実際、下のタブ（きろく・こよみ…）が画面の外に押し出されて
-   * スクロールしないと見えない状態になっていた。
-   * 100dvh は いま見えている高さなので、こちらに合わせる。
+   * もともと高さを 100vh で決めていたが、これは
+   * 「アドレスバーなどが隠れたときの高さ」を指すため、
+   * バーやナビゲーションバーが出ている ぶんだけ下がはみ出し、
+   * 下のタブ（きろく・こよみ…）が画面の外に押し出されていた。
+   * 上に妙な余白ができるのも これが原因で、
+   * 中身が「実際より高い箱」の中で 上下中央に置かれていたため。
    *
-   * 対応していない古い端末では、上の min-height: 100vh のまま
-   * これまでどおり動く（@supports で囲っているため）。
+   * position: fixed + inset: 0 なら、いま見えている範囲そのものに合う。
+   * dvh のような新しい単位に頼らないので、古い端末でも同じように収まる。
    */
-  @supports (height: 100dvh) {
-    .phone-stage,
-    .phone-frame {
-      height: 100dvh;
-      min-height: 0;
-    }
+  html,
+  body {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
 
-    /* 中身が多いときに はみ出さず、main の中だけで縦に送れるように */
-    .phone-screen {
-      min-height: 0;
-    }
+  .phone-stage {
+    position: fixed;
+    inset: 0;
+    min-height: 0;
+  }
+
+  /* 中身が多いときは はみ出さず、main の中だけで縦に送る */
+  .phone-frame,
+  .phone-screen {
+    min-height: 0;
   }
 }
 
