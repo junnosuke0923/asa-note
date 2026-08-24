@@ -84,6 +84,9 @@ body {
   min-height: 100vh;
   color: var(--color-ink);
   -webkit-tap-highlight-color: transparent;
+  /* iOS が よかれと思って文字を大きくすることがあるので、そのままの大きさで出す */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 #root {
@@ -143,6 +146,31 @@ body {
     padding-bottom: env(safe-area-inset-bottom);
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
+  }
+
+  /*
+   * 実機での高さは 100vh ではなく 100dvh に合わせる。
+   *
+   * 100vh は「ブラウザのアドレスバーが隠れたときの高さ」なので、
+   * バーが出ている あいだは そのぶん画面からはみ出す。
+   * 実際、下のタブ（きろく・こよみ…）が画面の外に押し出されて
+   * スクロールしないと見えない状態になっていた。
+   * 100dvh は いま見えている高さなので、こちらに合わせる。
+   *
+   * 対応していない古い端末では、上の min-height: 100vh のまま
+   * これまでどおり動く（@supports で囲っているため）。
+   */
+  @supports (height: 100dvh) {
+    .phone-stage,
+    .phone-frame {
+      height: 100dvh;
+      min-height: 0;
+    }
+
+    /* 中身が多いときに はみ出さず、main の中だけで縦に送れるように */
+    .phone-screen {
+      min-height: 0;
+    }
   }
 }
 
