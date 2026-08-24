@@ -10,7 +10,7 @@
  * 一度読んだものを控えておき、次回はそれを使いつつ裏で更新する方式にしている。
  */
 
-const CACHE = 'kiso-taion-v1'
+const CACHE = 'kiso-taion-v2'
 
 // 最低限これだけは先に control下に置く
 const CORE = ['./', './index.html', './manifest.webmanifest']
