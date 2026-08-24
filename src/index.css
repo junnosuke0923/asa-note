@@ -1,0 +1,487 @@
+@import "tailwindcss";
+
+@theme {
+  /* 紙・下地 */
+  --color-paper: #fffdf5;
+  --color-pastel-pink: #ffeff2;
+  --color-warm-yellow: #fffbe6;
+
+  /* 線（太い手描き風の輪郭）— 純黒ではなく温かみのある焦茶 */
+  --color-ink: #5a4a3f;
+  --color-ink-soft: #9c8878;
+
+  /* ほっぺのピンク */
+  --color-cheek: #ffb3c1;
+  --color-cheek-deep: #ef7d94;
+
+  /* ハチワレの水色 */
+  --color-hachi: #a9dcef;
+  --color-hachi-deep: #62b6d6;
+
+  /* うさぎの黄色 */
+  --color-usagi: #ffe49c;
+
+  /* 草むしりの緑 */
+  --color-grass: #c8e5b4;
+  --color-grass-deep: #7fb765;
+
+  --font-maru: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "BIZ UDGothic", sans-serif;
+  --font-hand: "Yomogi", "Zen Maru Gothic", sans-serif;
+}
+
+/*
+ * 暗い画面（夜間モード）。
+ *
+ * 基礎体温は朝5〜6時の暗い寝室で測ることが多い。
+ * 明るいクリーム色のままだと、起きた直後の目にはまぶしい。
+ *
+ * 色の名前はそのままに、中身だけ差し替える方式にしてある。
+ * こうすると、各画面のコードを一切さわらずに切り替えられる。
+ *   ・線と文字（ink）… 暗い焦茶 → 明るい生成り
+ *   ・下地（paper / warm-yellow）… 明るい → 暗い
+ *   ・差し色（cheek / hachi など）… 暗い下地でも沈まない明るさに
+ */
+@utility night-palette {
+  color-scheme: dark;
+
+  /* 下地は ほぼ黒に近い茶。真っ黒だと線が浮きすぎて硬く見える */
+  --color-paper: #2b2723;
+  --color-pastel-pink: #2b2120;
+  --color-warm-yellow: #1d1a17;
+
+  /* 線と文字は 明るい生成りに反転させる */
+  --color-ink: #ece2d6;
+  --color-ink-soft: #9c9086;
+
+  /* 差し色は、塗り＝暗め／文字に使うほう＝明るめ に振り分ける */
+  --color-cheek: #7d4753;
+  --color-cheek-deep: #f295a3;
+
+  --color-hachi: #2f5668;
+  --color-hachi-deep: #82c8e2;
+
+  --color-usagi: #6d5c31;
+
+  --color-grass: #3c5a38;
+  --color-grass-deep: #93cb81;
+}
+
+/* 手動で「暗い」を選んだとき */
+:root[data-theme='dark'] {
+  @apply night-palette;
+}
+
+/* 「端末にあわせる」を選んでいて、端末が暗い設定のとき */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme='auto'] {
+    @apply night-palette;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-maru);
+  min-height: 100vh;
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ---- スマホのモックアップ枠 ---------------------------------------- */
+
+/* 実機のスマホ幅では枠を出さず、そのまま全画面に広がる */
+.phone-stage,
+.phone-frame {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.phone-frame {
+  flex: 1;
+}
+
+.phone-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  background-color: var(--color-warm-yellow);
+  background-image:
+    radial-gradient(ellipse 70% 40% at 15% 0%, var(--color-pastel-pink) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 35% at 90% 100%, var(--color-pastel-pink) 0%, transparent 70%);
+}
+
+/* 画面の中身。全画面のパネルはここを基準に重なるので、ステータスバーは隠れない */
+.phone-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 実機では本物のステータスバー・ホームバーがあるので出さない */
+.phone-island,
+.phone-statusbar,
+.phone-home {
+  display: none;
+}
+
+/*
+ * 実機（とくにホーム画面に追加したとき）は、上のノッチと
+ * 下のホームバーに画面が隠れる。その分だけ内側に寄せる。
+ */
+@media (max-width: 767px) {
+  .phone-screen {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* PCなど広い画面では、スマホの実寸の枠に収めて中央に置く */
+@media (min-width: 768px) {
+  body {
+    background-color: var(--color-desk, #e9e2d7);
+    background-image: radial-gradient(
+      ellipse 60% 50% at 50% 0%,
+      var(--color-desk-glow, #f3ede3) 0%,
+      transparent 70%
+    );
+  }
+
+  .phone-stage {
+    align-items: center;
+    justify-content: center;
+    padding: 28px 16px;
+  }
+
+  .phone-frame {
+    position: relative;
+    flex: none;
+    width: 390px;
+    height: min(844px, calc(100vh - 56px));
+    min-height: 0;
+    padding: 11px;
+    border-radius: 54px;
+    background: #2f2823;
+    box-shadow:
+      0 0 0 2px #1b1613,
+      0 18px 40px rgba(47, 40, 35, 0.32);
+  }
+
+  /* 上部のダイナミックアイランド風の黒い横棒 */
+  .phone-island {
+    display: block;
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 104px;
+    height: 26px;
+    border-radius: 999px;
+    background: #1b1613;
+    z-index: 60;
+  }
+
+  .phone-screen {
+    border-radius: 43px;
+  }
+
+  /*
+   * ステータスバー。
+   * ダイナミックアイランド（上から11px・高さ26px）と中心を揃えたいので、
+   * 高さ48px・上寄せ気味にして、時刻と各アイコンが島の左右に並ぶようにする。
+   */
+  .phone-statusbar {
+    display: flex;
+    height: 48px;
+    padding-top: 4px;
+  }
+
+  /* 下のホームバー */
+  .phone-home {
+    display: block;
+    height: 22px;
+    position: relative;
+  }
+
+  .phone-home::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 134px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--color-ink);
+    opacity: 0.35;
+  }
+}
+
+/*
+  ちいかわの署名的な要素は「太めの手描きの線」。
+  角丸を四隅バラバラにすることで、定規で引いていない感じを出す。
+*/
+@utility ink-line {
+  border: 3px solid var(--color-ink);
+}
+
+@utility blob-a {
+  border-radius: 30px 26px 32px 28px;
+}
+
+@utility blob-b {
+  border-radius: 22px 27px 21px 26px;
+}
+
+@utility blob-pill {
+  border-radius: 999px 980px 999px 990px;
+}
+
+/*
+ * シールを貼ったような、ずらした影。
+ * 暗い画面では 焦茶の影が見えないので、色を差し替える。
+ */
+@theme {
+  --shadow-sticker: 3px 4px 0 rgba(90, 74, 63, 0.16);
+}
+
+:root[data-theme='dark'] {
+  --shadow-sticker: 3px 4px 0 rgba(0, 0, 0, 0.45);
+  /* PCで枠のまわりに見える「机」の色 */
+  --color-desk: #171513;
+  --color-desk-glow: #221f1c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme='auto'] {
+    --shadow-sticker: 3px 4px 0 rgba(0, 0, 0, 0.45);
+    --color-desk: #171513;
+    --color-desk-glow: #221f1c;
+  }
+}
+
+@utility sticker-shadow {
+  box-shadow: var(--shadow-sticker);
+}
+
+/*
+ * top を % で動かしているのは、紙吹雪の落下距離を「画面の高さ」ではなく
+ * 「スマホ枠の高さ」に合わせるため（vh だと枠からはみ出してしまう）。
+ */
+@keyframes confetti-fall {
+  0% {
+    top: -12%;
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    top: 112%;
+    transform: rotate(680deg);
+    opacity: 0.85;
+  }
+}
+
+.animate-confetti-fall {
+  animation-name: confetti-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+}
+
+@keyframes modal-pop {
+  0% {
+    transform: scale(0.8) rotate(-3deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.04) rotate(1deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.animate-modal-pop {
+  animation: modal-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ぷるぷる震える — ちいかわがよくやる仕草 */
+@keyframes puru {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(-1.2px) rotate(-1.2deg);
+  }
+  75% {
+    transform: translateX(1.2px) rotate(1.2deg);
+  }
+}
+
+.animate-puru {
+  animation: puru 0.16s linear infinite;
+}
+
+/* ぴょこんと跳ねる */
+@keyframes pyokon {
+  0%,
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+  30% {
+    transform: translateY(-12px) scaleY(1.06);
+  }
+  55% {
+    transform: translateY(0) scaleY(0.94);
+  }
+  75% {
+    transform: translateY(-4px) scaleY(1.02);
+  }
+}
+
+.animate-pyokon {
+  animation: pyokon 0.7s ease-out;
+}
+
+/* ゆっくり漂う（待機中） */
+@keyframes fuwa {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(1.5deg);
+  }
+}
+
+.animate-fuwa {
+  animation: fuwa 3.4s ease-in-out infinite;
+}
+
+/*
+ * 目盛り入力。
+ * 0.01 きざみへの吸着は JS 側でやっているので、ここでは
+ * スクロールバーを隠すのと、横に振り切ったときに
+ * 画面ごと動いてしまうのを止めるだけ。
+ */
+.ruler-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+}
+
+.ruler-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* 小さな反応。ぽんと出て、しばらくして すっと消える */
+@keyframes mini-cheer {
+  0% {
+    transform: translateY(14px) scale(0.9);
+    opacity: 0;
+  }
+  14% {
+    transform: translateY(0) scale(1.04);
+    opacity: 1;
+  }
+  22% {
+    transform: translateY(0) scale(1);
+  }
+  80% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-8px) scale(0.96);
+    opacity: 0;
+  }
+}
+
+.animate-mini-cheer {
+  animation: mini-cheer 1.9s ease-out forwards;
+}
+
+/* 草が風にゆれる。根元を軸に傾けたいので transform-origin を指定して使う */
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-2.2deg);
+  }
+  50% {
+    transform: rotate(2.2deg);
+  }
+}
+
+.animate-sway {
+  animation: sway 4.2s ease-in-out infinite;
+}
+
+/* 賞状のふちの二重線 */
+@utility rule-inset {
+  border: 2px dashed color-mix(in srgb, var(--color-ink) 28%, transparent);
+}
+
+/* 印鑑ふうの丸スタンプ */
+@utility hanko {
+  border: 2.5px solid var(--color-cheek-deep);
+  color: var(--color-cheek-deep);
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-sway,
+  .animate-fuwa,
+  .animate-puru {
+    animation: none;
+  }
+}
+
+/*
+ * 印刷用。
+ * 画面ではスマホの枠の中に収めているが、印刷では枠を取り払って
+ * 紙いっぱいに表を出す。
+ */
+@media print {
+  body {
+    background: #fff !important;
+  }
+
+  .phone-stage,
+  .phone-frame,
+  .phone-screen {
+    all: unset !important;
+    display: block !important;
+  }
+
+  .phone-island,
+  nav {
+    display: none !important;
+  }
+
+  .print-sheet {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  /* 表が行の途中で切れないように */
+  tr,
+  svg {
+    break-inside: avoid;
+  }
+
+  @page {
+    margin: 12mm;
+  }
+}

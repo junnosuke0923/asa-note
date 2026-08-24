@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "oxc", "import"],
+  "env": { "browser": true, "es2024": true },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }],
+    "no-undef": "error",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "import/named": "error",
+    "import/default": "error",
+    "no-console": "warn",
+    "eqeqeq": ["error", "smart"]
+  },
+  "overrides": [
+    {
+      "files": ["scripts/**", "vite.config.js", "vite-plugin-*.js"],
+      "env": { "node": true, "browser": false },
+      "rules": { "no-console": "off" }
+    }
+  ]
+}
