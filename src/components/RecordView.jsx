@@ -54,9 +54,14 @@ function RecordView({
   /*
    * すき間が gap-3 なのは、そのぶんを 上の絵の大きさに回しているため。
    * 画面の高さは決まっているので、絵を大きくした ぶんだけ どこかを詰める。
+   *
+   * 縦は justify-center で 中央に置いていたが、それだと
+   * 縦長の端末で 上に大きな余白ができてしまう。
+   * 上から順に置いて、余ったぶんは 下の「きろく する！」の手前で
+   * 引き受けるようにした。ボタンが 親指の届く下のほうに来る利点もある。
    */
   return (
-    <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-3 px-5 py-5">
+    <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-3 px-5 py-5">
       <header className="flex flex-col items-center gap-1">
         <AppImage
           src={image}
@@ -108,6 +113,9 @@ function RecordView({
         <Icon name="calendar" size={13} />
         月経・なかよし・体重などは「こよみ」から記録できます
       </button>
+
+      {/* 余った高さを ここで吸収する。画面が短いときは 0 まで縮む */}
+      <div className="min-h-0 flex-1" aria-hidden="true" />
 
       <RecordButton onClick={onRecord} label={alreadyRecorded ? 'なおす' : 'きろく する！'} />
 
