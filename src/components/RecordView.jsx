@@ -51,14 +51,18 @@ function RecordView({
 
   const isToday = targetKey === todayKey()
 
+  /*
+   * すき間が gap-3 なのは、そのぶんを 上の絵の大きさに回しているため。
+   * 画面の高さは決まっているので、絵を大きくした ぶんだけ どこかを詰める。
+   */
   return (
-    <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-4 px-5 py-5">
+    <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-3 px-5 py-5">
       <header className="flex flex-col items-center gap-1">
         <AppImage
           src={image}
-          size={52}
+          size={84}
           className="animate-fuwa"
-          fallback={<Sprout size={44} className="animate-fuwa" />}
+          fallback={<Sprout size={72} className="animate-fuwa" />}
         />
         <p className="text-sm font-bold text-ink-soft">{formatLong(targetKey)}</p>
         <h1 className="font-hand text-xl font-bold">
