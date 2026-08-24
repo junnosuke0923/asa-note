@@ -40,7 +40,12 @@ function DayCell({ dateKey, record, treatment, isToday, prediction }) {
 
   return (
     <div
-      className={`relative flex h-14 flex-col items-center justify-start gap-0.5 rounded-xl pt-1 ${
+      /*
+        背の高い端末では マスを大きくする。
+        下に空きができるのを減らせるうえ、指でも押しやすくなる。
+        画面が低いときは これまでどおり 56px のまま。
+      */
+      className={`relative flex h-14 flex-col items-center justify-start gap-0.5 rounded-xl pt-1 [@media(min-height:880px)]:h-[76px] ${
         record?.period ? 'bg-cheek/55' : ''
       } ${isToday ? 'ink-line' : ''} ${
         isPredictedPeriod ? 'border-2 border-dashed border-cheek-deep/70' : ''
