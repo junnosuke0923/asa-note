@@ -17,8 +17,21 @@ import { fileURLToPath } from 'node:url'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const pagesDir = join(root, '..', 'asa-note-pages')
 
+/*
+ * このパソコンのユーザー名（本名）を、Gitが作者名として
+ * 自動で拾ってしまったことがあった。公開リポジトリなので、
+ * それは避けたい。設定ファイルは変えず、コミットのたびに
+ * その場だけ安全な名前を指定する。
+ */
+const GIT_IDENTITY =
+  '-c user.name="junnosuke0923" -c user.email="251002352+junnosuke0923@users.noreply.github.com"'
+
 function run(cmd, cwd) {
   execSync(cmd, { cwd, stdio: 'inherit' })
+}
+
+function runGit(cmd, cwd) {
+  run(`git ${GIT_IDENTITY} ${cmd}`, cwd)
 }
 
 console.log('ビルドしています…')
@@ -40,14 +53,14 @@ for (const name of ['assets', 'icons']) {
 }
 cpSync(join(root, 'dist'), pagesDir, { recursive: true })
 
-run('git add -A', pagesDir)
+runGit('add -A', pagesDir)
 
 try {
-  run('git commit -m "公開用ビルド"', pagesDir)
+  runGit('commit -m "公開用ビルド"', pagesDir)
 } catch {
   console.log('前回から 変わったところが無いようです。書き出しは終わりにします。')
   process.exit(0)
 }
 
-run('git push origin gh-pages', pagesDir)
+runGit('push origin gh-pages', pagesDir)
 console.log('\n公開しました → https://junnosuke0923.github.io/asa-note/')
