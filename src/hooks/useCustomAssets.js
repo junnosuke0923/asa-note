@@ -90,6 +90,22 @@ export function useCustomAssets() {
     }
   }, [decorations, cheerSets])
 
+  /**
+   * 焼きこんだ内容を、そのままスマホの公開URLにも送りだす。
+   * 組み立てて GitHub Pages に push するので、数十秒かかる。
+   */
+  const publish = useCallback(async () => {
+    try {
+      const response = await fetch('/__publish', { method: 'POST' })
+      const result = await response.json()
+      return result.ok
+        ? { ok: true, published: result.published }
+        : { ok: false, error: result.error ?? '公開できませんでした。' }
+    } catch {
+      return { ok: false, error: '開発中のときだけ 公開できます。' }
+    }
+  }, [])
+
   return useMemo(
     () => ({
       decorations,
@@ -100,6 +116,7 @@ export function useCustomAssets() {
       updateCheerSets,
       resetCheerSets,
       bake,
+      publish,
     }),
     [
       decorations,
@@ -109,6 +126,7 @@ export function useCustomAssets() {
       updateCheerSets,
       resetCheerSets,
       bake,
+      publish,
     ],
   )
 }

@@ -318,6 +318,7 @@ function App() {
           onChangeCheerSets={assets.updateCheerSets}
           onResetCheerSets={assets.resetCheerSets}
           onBake={assets.bake}
+          onPublish={assets.publish}
           onClose={() => setIsCustomizing(false)}
         />
       )}

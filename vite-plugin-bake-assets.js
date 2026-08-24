@@ -1,3 +1,4 @@
+import { exec } from 'node:child_process'
 import { writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
@@ -9,10 +10,15 @@ import { resolve } from 'node:path'
  * アプリの中身そのものにしてしまう。
  *
  * 開発中（npm run dev）だけ動く。本番のビルドには一切含まれない。
+ *
+ * 焼きこみに続けて、そのまま公開（npm run deploy）まで
+ * 進められる道も用意してある。ちょっとした直しのときに、
+ * 別のバットファイルを探しに行かなくて済むように。
  */
 
 const TARGET = 'src/data/appAssets.js'
 const ENDPOINT = '/__bake-assets'
+const PUBLISH_ENDPOINT = '/__publish'
 const MAX_BODY = 24 * 1024 * 1024
 
 const HEADER = `/*
@@ -106,6 +112,29 @@ export default function bakeAssets() {
           res.setHeader('Content-Type', 'application/json')
           res.end(JSON.stringify({ ok: false, error: String(error.message ?? error) }))
         }
+      })
+
+      server.middlewares.use(PUBLISH_ENDPOINT, async (req, res, next) => {
+        if (req.method !== 'POST') return next()
+
+        // 組み立て・送信で数十秒かかるため、待っているあいだも
+        // 画面じたいは固まらないよう、非同期のexecで動かす
+        exec(
+          'node scripts/deploy-pages.mjs',
+          { cwd: server.config.root, maxBuffer: 10 * 1024 * 1024 },
+          (error, stdout, stderr) => {
+            res.setHeader('Content-Type', 'application/json')
+            const log = stdout + stderr
+
+            if (error) {
+              res.statusCode = 500
+              res.end(JSON.stringify({ ok: false, error: '公開の途中で止まりました。', log }))
+              return
+            }
+
+            res.end(JSON.stringify({ ok: true, published: log.includes('公開しました'), log }))
+          },
+        )
       })
     },
   }

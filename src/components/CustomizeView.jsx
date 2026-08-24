@@ -6,6 +6,7 @@ import {
   fileToImageData,
 } from '../lib/customAssets'
 import AppImage from './AppImage'
+import AskModal from './AskModal'
 import GrowingPlant from './GrowingPlant'
 import Icon from './Icon'
 import Sprout from './Sprout'
@@ -280,16 +281,33 @@ function CustomizeView({
   onChangeCheerSets,
   onResetCheerSets,
   onBake,
+  onPublish,
   onClose,
 }) {
   const [tab, setTab] = useState('sets')
   const [bakeResult, setBakeResult] = useState(null)
   const [baking, setBaking] = useState(false)
 
+  // 焼きこんだ直後に「公開もするか」を聞く。ちょっとした直しなら
+  // これだけで、あとから別のバットファイルを探さなくて済む
+  const [askPublish, setAskPublish] = useState(false)
+  const [publishing, setPublishing] = useState(false)
+  const [publishResult, setPublishResult] = useState(null)
+
   const handleBake = async () => {
     setBaking(true)
-    setBakeResult(await onBake())
+    setPublishResult(null)
+    const result = await onBake()
+    setBakeResult(result)
     setBaking(false)
+    if (result.ok) setAskPublish(true)
+  }
+
+  const handlePublish = async () => {
+    setAskPublish(false)
+    setPublishing(true)
+    setPublishResult(await onPublish())
+    setPublishing(false)
   }
 
   return (
@@ -376,9 +394,40 @@ function CustomizeView({
                   : bakeResult.error}
               </p>
             )}
+
+            {publishing && (
+              <p className="mt-2 text-center text-[11px] font-black text-ink-soft">
+                公開しています…30秒ほど かかることがあります
+              </p>
+            )}
+
+            {publishResult && !publishing && (
+              <p
+                className={`mt-2 text-center text-[11px] font-black ${
+                  publishResult.ok ? 'text-grass-deep' : 'text-cheek-deep'
+                }`}
+              >
+                {publishResult.ok
+                  ? publishResult.published
+                    ? '公開しました。スマホのアイコンを開きなおすと反映されています'
+                    : '公開ずみでした（前回から 変わったところが ありません）'
+                  : publishResult.error}
+              </p>
+            )}
           </div>
         </div>
       </div>
+
+      {askPublish && (
+        <AskModal
+          title={'焼きこみました！\nスマホの公開URLにも 送りだしますか？'}
+          body="30秒ほどかかります。あとで まとめて公開しても構いません。"
+          okLabel="いま 公開する"
+          cancelLabel="あとで"
+          onOk={handlePublish}
+          onCancel={() => setAskPublish(false)}
+        />
+      )}
     </div>
   )
 }
