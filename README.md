@@ -22,6 +22,7 @@
 | `npm run lint` | 書き方の点検 |
 | `node scripts/bundle-artifact.mjs` | 1枚のHTMLにまとめる（Artifact公開用） |
 | `npm run deploy` | 今のコードを、スマホ用の公開URLに反映する |
+| `python scripts/make-icons.py <画像>` | ホーム画面のアイコン一式を作りなおす |
 
 ### 設計のメモ
 
