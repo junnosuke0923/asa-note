@@ -112,8 +112,8 @@ def main():
         icon.save(OUT_DIR / name)
         print(f"  作成: {name}（{size}×{size}）")
 
+    # このあと公開するかどうかは、呼び出し元（make-icons.ps1）が聞く
     print("\nできました。")
-    print("反映するには「3_スマホ用に公開する.bat」を実行してください。")
     return 0
 
 

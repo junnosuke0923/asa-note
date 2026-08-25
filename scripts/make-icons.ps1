@@ -43,11 +43,42 @@ Say '正方形に近い絵ほど きれいに収まります。' 'DarkGray'
 Say '（Androidは 丸や四角に切り抜くので、絵は中央に寄せて作ります）' 'DarkGray'
 Write-Host ''
 
+$made = $false
 try {
   & python scripts/make-icons.py "$Source"
+  $made = ($LASTEXITCODE -eq 0)
 } catch {
   Say '作成の途中で止まりました。' 'Red'
   Say $_.Exception.Message 'Red'
+}
+
+<#
+  作っただけでは スマホ側は前のままなので、その場で聞く。
+  「あとで 3 を実行してください」と書いておくだけでは
+  見落とされて「変わらない」と思われてしまう。
+#>
+if ($made) {
+  Write-Host ''
+  Say 'このままだと スマホ側は まだ前のアイコンのままです。' 'Yellow'
+  $answer = Read-Host '  いま公開しますか？（y / n）'
+
+  if ($answer -match '^[yY]') {
+    Write-Host ''
+    Say '公開しています…30秒ほど かかります。'
+    Write-Host ''
+    try {
+      & npm run deploy
+      Write-Host ''
+      Say 'できました。' 'Green'
+      Say 'スマホでは いったんアイコンを長押しして削除し、' 'Green'
+      Say 'もう一度「ホーム画面に追加」してください。' 'Green'
+    } catch {
+      Say '公開の途中で止まりました。' 'Red'
+    }
+  } else {
+    Write-Host ''
+    Say 'あとで「3_スマホ用に公開する.bat」を実行してください。' 'Yellow'
+  }
 }
 
 Write-Host ''
