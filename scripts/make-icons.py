@@ -16,6 +16,9 @@
   python scripts/make-icons.py <元にする画像>
 """
 
+import hashlib
+import json
+import re
 import sys
 from pathlib import Path
 
@@ -78,7 +81,57 @@ def compose(art, size, scale, rounded):
     return canvas
 
 
+def stamp_version():
+    """
+    アイコンの住所に、中身から作った版番号を付ける。
+
+    ■ なぜ必要か
+    Android は「ホーム画面に追加」したとき、アイコンを焼きこんだ
+    小さなアプリ（WebAPK）を端末の中に作る。それを作り直すかどうかは
+    manifest.webmanifest の中身が変わったかどうかで決めている。
+
+    絵だけ差し替えても、住所（icons/icon-192.png）は同じままなので
+    manifest は1文字も変わらない。すると Android は「変更なし」と判断し、
+    入れ直しても 古いアイコンを使い続けてしまう。
+
+    そこで住所のうしろに ?v=<中身のハッシュ> を付ける。
+    絵を変えれば ハッシュも変わり、manifest も変わるので
+    Android が ちゃんと作り直す。
+    絵が同じなら ハッシュも同じなので、余計な更新は起きない。
+    """
+    digest = hashlib.md5()
+    for name in sorted(path.name for path in OUT_DIR.glob("*.png")):
+        digest.update((OUT_DIR / name).read_bytes())
+    version = digest.hexdigest()[:8]
+
+    manifest_path = ROOT / "public" / "manifest.webmanifest"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    for icon in manifest.get("icons", []):
+        icon["src"] = icon["src"].split("?")[0] + f"?v={version}"
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+
+    # iPhone 用の1枚は index.html から直接 読まれている
+    index_path = ROOT / "index.html"
+    html = index_path.read_text(encoding="utf-8")
+    html = re.sub(
+        r'(href="\./icons/apple-touch-icon\.png)(\?v=[0-9a-f]+)?"',
+        rf'\1?v={version}"',
+        html,
+    )
+    index_path.write_text(html, encoding="utf-8")
+
+    print(f"  版番号: v={version}（絵が変わったことが 端末に伝わります）")
+    return version
+
+
 def main():
+    # 絵はそのままで、版番号だけ打ち直したいとき
+    if len(sys.argv) >= 2 and sys.argv[1] == "--stamp-only":
+        stamp_version()
+        return 0
+
     if len(sys.argv) < 2:
         print("元にする画像を指定してください。")
         print("  例: python scripts/make-icons.py C:\\Users\\...\\myicon.png")
@@ -111,6 +164,8 @@ def main():
             icon = flat.convert("RGB")
         icon.save(OUT_DIR / name)
         print(f"  作成: {name}（{size}×{size}）")
+
+    stamp_version()
 
     # このあと公開するかどうかは、呼び出し元（make-icons.ps1）が聞く
     print("\nできました。")
