@@ -61,8 +61,32 @@ if ($Mode -eq 'dev') {
   Say '（編集画面は出ません。実際に使うときの見た目です）'
 }
 
+<#
+  住所（ポート番号）が空いているか、先に確かめる。
+
+  このアプリは 5273 番（かいはつ）／5274 番（使ってみる）を
+  自分の住所と決めてある。ほかのアプリが使っていると起動できないので、
+  「なぜ開けないのか」がその場で分かるように伝える。
+
+  以前、別のツールのサーバーが立ちっぱなしで住所を取っており、
+  こちらが黙って隣の番号にずれた結果、
+  いつもの住所を開くと別のツールが出てくる、ということが起きた。
+#>
+$port = if ($Mode -eq 'dev') { 5273 } else { 5274 }
+$busy = Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue
+
+if ($busy) {
+  Write-Host ''
+  Say "住所（$port 番）が ふさがっています。" 'Red'
+  Say 'ほかのアプリの黒い画面が 開いたままになっていませんか？' 'Yellow'
+  Say 'それを閉じてから、もう一度この .bat を実行してください。' 'Yellow'
+  Write-Host ''
+  Read-Host '  Enterキーで閉じます'
+  exit 1
+}
+
 Write-Host ''
-Say 'ブラウザが 自動でひらきます。少しお待ちください。'
+Say "ブラウザが 自動でひらきます（http://localhost:$port）。"
 Say 'おわるときは、この黒い画面を閉じてください。' 'DarkGray'
 Write-Host ''
 
