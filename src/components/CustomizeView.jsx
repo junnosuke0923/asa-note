@@ -67,12 +67,12 @@ function CheerSetRow({ set, index, onChange, onRemove }) {
     <div className="ink-line blob-b bg-paper px-3 py-3">
       <div className="flex gap-3">
         {/* 絵 */}
-        <div className="flex w-[76px] shrink-0 flex-col items-center gap-1.5">
-          <div className="ink-line blob-b flex size-[72px] items-center justify-center overflow-hidden bg-warm-yellow">
+        <div className="flex w-[100px] shrink-0 flex-col items-center gap-1.5">
+          <div className="ink-line blob-b flex size-[96px] items-center justify-center overflow-hidden bg-warm-yellow">
             <AppImage
               src={set.image}
-              size={64}
-              fallback={<Sprout size={44} className="opacity-45" />}
+              size={88}
+              fallback={<Sprout size={60} className="opacity-45" />}
             />
           </div>
 
@@ -238,8 +238,8 @@ function DecorationsTab({ decorations, onPick, onClear }) {
 
       {DECORATION_SLOTS.map((slot) => (
         <div key={slot.id} className="ink-line blob-b flex items-center gap-3 bg-paper px-3 py-3">
-          <div className="ink-line blob-b flex size-[68px] shrink-0 items-center justify-center overflow-hidden bg-warm-yellow">
-            <AppImage src={decorations[slot.id]} size={60} fallback={FALLBACKS[slot.id]} />
+          <div className="ink-line blob-b flex size-[92px] shrink-0 items-center justify-center overflow-hidden bg-warm-yellow">
+            <AppImage src={decorations[slot.id]} size={84} fallback={FALLBACKS[slot.id]} />
           </div>
 
           <div className="min-w-0 flex-1">

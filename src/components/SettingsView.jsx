@@ -388,9 +388,9 @@ function SettingsView({
       <h1 className="flex items-center justify-center gap-1.5 font-hand text-xl font-bold">
         <AppImage
           src={image}
-          size={30}
+          size={44}
           className="animate-fuwa"
-          fallback={<TinyChara pose="smile" size={28} className="animate-fuwa" />}
+          fallback={<TinyChara pose="smile" size={40} className="animate-fuwa" />}
         />
         設定
       </h1>

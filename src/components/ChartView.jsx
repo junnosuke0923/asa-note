@@ -24,9 +24,9 @@ function ChartView({ records, treatments = {}, image, headerImage }) {
       <h1 className="flex items-center justify-center gap-1.5 font-hand text-xl font-bold">
         <AppImage
           src={headerImage}
-          size={30}
+          size={44}
           className="animate-fuwa"
-          fallback={<Sprout size={26} className="animate-fuwa" />}
+          fallback={<Sprout size={38} className="animate-fuwa" />}
         />
         体温のグラフ
       </h1>

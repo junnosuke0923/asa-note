@@ -60,17 +60,22 @@ function RecordView({
    * そこだけ ぽっかり空いて見えた。
    * そこで 余りを3か所に 1:2:2 で分けて、
    * どこか1か所だけが目立って空くことがないようにしている。
+   *
+   * 背の低い端末では すき間と上下の余白を詰める。
+   * ここを詰めないと「きろく する！」が画面の外へ押し出され、
+   * スクロールしないと押せなくなるため。
    */
   return (
-    <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-3 px-5 py-5">
+    <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-3 px-5 py-5 [@media(max-height:840px)]:gap-2 [@media(max-height:840px)]:py-2">
       <div className="min-h-0 flex-[1]" aria-hidden="true" />
 
       <header className="flex flex-col items-center gap-1">
         <AppImage
           src={image}
-          size={84}
+          size={112}
+          sizeClass="size-[96px] [@media(min-height:760px)]:size-[112px] [@media(min-height:880px)]:size-[132px]"
           className="animate-fuwa"
-          fallback={<Sprout size={72} className="animate-fuwa" />}
+          fallback={<Sprout size={84} className="animate-fuwa" />}
         />
         <p className="text-sm font-bold text-ink-soft">{formatLong(targetKey)}</p>
         <h1 className="font-hand text-xl font-bold">

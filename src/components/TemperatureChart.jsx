@@ -87,9 +87,9 @@ function EmptyChart({ image }) {
     <div className="ink-line blob-a sticker-shadow flex flex-col items-center gap-3 bg-paper px-6 py-10 text-center">
       <AppImage
         src={image}
-        size={68}
+        size={100}
         className="animate-fuwa"
-        fallback={<Sprout size={56} className="animate-fuwa" />}
+        fallback={<Sprout size={82} className="animate-fuwa" />}
       />
       <p className="font-hand text-base font-bold">まだ なにも ないヨ</p>
       <p className="text-xs leading-relaxed text-ink-soft">
