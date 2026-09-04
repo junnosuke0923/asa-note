@@ -52,14 +52,12 @@ function RecordView({
   const isToday = targetKey === todayKey()
 
   /*
-   * すき間が gap-3 なのは、そのぶんを 上の絵の大きさに回しているため。
-   * 画面の高さは決まっているので、絵を大きくした ぶんだけ どこかを詰める。
-   *
    * 縦の余りかたは、端末の高さによって ずいぶん変わる。
    * 中央ぞろえにすると 上が空きすぎ、1か所にまとめると
    * そこだけ ぽっかり空いて見えた。
-   * そこで 余りを3か所に 1:2:2 で分けて、
-   * どこか1か所だけが目立って空くことがないようにしている。
+   * そこで 余りを3か所（上の絵・ボタンの上・ボタンの下）に
+   * 2:2:2 で分けている。上の取り分は そのまま絵の大きさになるので、
+   * 縦に余裕のある端末ほど 絵が大きく出る。
    *
    * 背の低い端末では すき間と上下の余白を詰める。
    * ここを詰めないと「きろく する！」が画面の外へ押し出され、
@@ -67,16 +65,30 @@ function RecordView({
    */
   return (
     <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-3 px-5 py-5 [@media(max-height:840px)]:gap-2 [@media(max-height:840px)]:py-2">
-      <div className="min-h-0 flex-[1]" aria-hidden="true" />
+      {/*
+        絵の高さは 画面の高さで決める。
+        上の余白を担っていた すき間を、この絵が兼ねている。
+        絵そのものが 余白の役をするので、上が ぽっかり空くこともない。
 
-      <header className="flex flex-col items-center gap-1">
+        「残りを めいっぱい使う」書き方（flex-grow）も試したが、
+        画面に入りきらないときに かえって絵が伸びて
+        「きろく する！」を 画面の外へ押し出してしまった。
+        入りきらない場合は 縮んでほしいので、高さで段階を決めている。
+
+        絵は横長のことが多いので、高さを決めれば 幅はそれに従う。
+        画面より広くならないよう max-w-full だけ添えておく。
+      */}
+      <div className="flex h-[84px] shrink-0 items-end justify-center [@media(min-height:760px)]:h-[96px] [@media(min-height:840px)]:h-[150px] [@media(min-height:920px)]:h-[200px]">
         <AppImage
           src={image}
-          size={112}
-          sizeClass="size-[96px] [@media(min-height:760px)]:size-[112px] [@media(min-height:880px)]:size-[132px]"
+          size={220}
+          sizeClass="h-full w-auto max-w-full"
           className="animate-fuwa"
-          fallback={<Sprout size={84} className="animate-fuwa" />}
+          fallback={<Sprout size={96} className="animate-fuwa" />}
         />
+      </div>
+
+      <header className="flex flex-col items-center gap-1">
         <p className="text-sm font-bold text-ink-soft">{formatLong(targetKey)}</p>
         <h1 className="font-hand text-xl font-bold">
           {alreadyRecorded ? 'もう つけたネ' : 'きょうの体温、はかった？'}
@@ -122,8 +134,8 @@ function RecordView({
         月経・なかよし・体重などは「こよみ」から記録できます
       </button>
 
-      {/* 余った高さの引き受け先。画面が短いときは 0 まで縮む */}
-      <div className="min-h-0 flex-[2]" aria-hidden="true" />
+      {/* 余った高さは ほとんど上の絵に回す。ここは 気持ちのすき間だけ */}
+      <div className="min-h-0 flex-[1]" aria-hidden="true" />
 
       <RecordButton onClick={onRecord} label={alreadyRecorded ? 'なおす' : 'きろく する！'} />
 
@@ -159,7 +171,7 @@ function RecordView({
         </button>
       )}
 
-      <div className="min-h-0 flex-[2]" aria-hidden="true" />
+      <div className="min-h-0 flex-[1]" aria-hidden="true" />
     </div>
   )
 }

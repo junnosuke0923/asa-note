@@ -23,7 +23,7 @@ function Certificate({ totalDays, current, image }) {
       <div className="rule-inset blob-b flex flex-col items-center gap-1 px-3 py-4">
         <AppImage
           src={image}
-          size={148}
+          size={190}
           fallback={<GrowingPlant totalDays={totalDays} size={124} />}
         />
 

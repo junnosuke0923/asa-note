@@ -158,9 +158,9 @@ function CalendarView({ records, treatments, onSelectDay, onQuickEntry, image })
         <div className="flex items-center gap-1.5">
           <AppImage
             src={image}
-            size={44}
+            size={60}
             className="animate-fuwa"
-            fallback={<Sprout size={38} className="animate-fuwa" />}
+            fallback={<Sprout size={52} className="animate-fuwa" />}
           />
           <h1 className="font-hand text-xl font-bold">{formatMonth(view.year, view.month)}</h1>
         </div>

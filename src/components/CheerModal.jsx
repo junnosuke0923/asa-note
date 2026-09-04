@@ -85,9 +85,9 @@ function CheerModal({ message, image, certification, subjugation, onClose, onSha
 
         <AppImage
           src={image}
-          size={isBadge ? 96 : 120}
+          size={isBadge ? 124 : 156}
           className="animate-fuwa"
-          fallback={<Sprout size={isBadge ? 78 : 98} className="animate-fuwa" />}
+          fallback={<Sprout size={isBadge ? 100 : 126} className="animate-fuwa" />}
         />
 
         <p className="font-hand text-2xl leading-relaxed font-bold whitespace-pre-line">
