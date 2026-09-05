@@ -16,7 +16,7 @@ import {
 } from '../lib/folderSave'
 import { AUTO_SAVE_FILENAME } from '../hooks/useFolderAutoSave'
 import AskModal from './AskModal'
-import AppImage from './AppImage'
+import HeaderArt from './HeaderArt'
 import TinyChara from './TinyChara'
 import Icon from './Icon'
 import InstallCard from './InstallCard'
@@ -385,15 +385,11 @@ function SettingsView({
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-3 px-4 py-5">
-      <h1 className="flex items-center justify-center gap-1.5 font-hand text-xl font-bold">
-        <AppImage
-          src={image}
-          size={60}
-          className="animate-fuwa"
-          fallback={<TinyChara pose="smile" size={54} className="animate-fuwa" />}
-        />
-        設定
-      </h1>
+      <HeaderArt
+        src={image}
+        fallback={<TinyChara pose="smile" size={64} className="animate-fuwa" />}
+      />
+      <h1 className="-mt-1 text-center font-hand text-xl font-bold">設定</h1>
 
       <BackupCard
         records={records}

@@ -3,7 +3,7 @@ import { withTemperature } from '../lib/records'
 import { calcPhaseInfo } from '../lib/temperature'
 import { TAGS } from '../lib/tags'
 import CycleStats from './CycleStats'
-import AppImage from './AppImage'
+import HeaderArt from './HeaderArt'
 import Icon from './Icon'
 import Sprout from './Sprout'
 import TemperatureChart from './TemperatureChart'
@@ -21,15 +21,11 @@ function ChartView({ records, treatments = {}, image, headerImage }) {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4 px-5 py-5">
-      <h1 className="flex items-center justify-center gap-1.5 font-hand text-xl font-bold">
-        <AppImage
-          src={headerImage}
-          size={60}
-          className="animate-fuwa"
-          fallback={<Sprout size={52} className="animate-fuwa" />}
-        />
-        体温のグラフ
-      </h1>
+      <HeaderArt
+        src={headerImage}
+        fallback={<Sprout size={64} className="animate-fuwa" />}
+      />
+      <h1 className="-mt-2 text-center font-hand text-xl font-bold">体温のグラフ</h1>
 
       {phase && (
         <div

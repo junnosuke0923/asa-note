@@ -10,7 +10,7 @@ import {
 } from '../lib/dateUtils'
 import { getCurrentCycleDay, getPredictions } from '../lib/cycle'
 import { HIGH_TEMP_THRESHOLD } from '../lib/temperature'
-import AppImage from './AppImage'
+import HeaderArt from './HeaderArt'
 import Icon from './Icon'
 import Sprout from './Sprout'
 
@@ -144,8 +144,10 @@ function CalendarView({ records, treatments, onSelectDay, onQuickEntry, image })
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-3 px-4 py-5">
+      <HeaderArt src={image} fallback={<Sprout size={64} className="animate-fuwa" />} />
+
       {/* 月の切り替え */}
-      <div className="flex items-center justify-between">
+      <div className="-mt-1 flex items-center justify-between">
         <button
           type="button"
           aria-label="前の月"
@@ -155,15 +157,7 @@ function CalendarView({ records, treatments, onSelectDay, onQuickEntry, image })
           <ChevronLeft size={22} strokeWidth={3} />
         </button>
 
-        <div className="flex items-center gap-1.5">
-          <AppImage
-            src={image}
-            size={60}
-            className="animate-fuwa"
-            fallback={<Sprout size={52} className="animate-fuwa" />}
-          />
-          <h1 className="font-hand text-xl font-bold">{formatMonth(view.year, view.month)}</h1>
-        </div>
+        <h1 className="font-hand text-xl font-bold">{formatMonth(view.year, view.month)}</h1>
 
         <button
           type="button"
