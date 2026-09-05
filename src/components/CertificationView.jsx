@@ -178,7 +178,7 @@ function SummaryCard({ label, value, unit, tone }) {
 
 /* ── 本体 ───────────────────────────────────────────────── */
 
-function CertificationView({ streak, totalDays, bestStreak, image, subjugation }) {
+function CertificationView({ streak, totalDays, bestStreak, image, subjugation, subjugationImage }) {
   // 級は「のべ何日つけたか」で決まる。連続が途切れても下がらない
   const current = getCurrentCertification(totalDays)
   const next = getNextCertification(totalDays)
@@ -194,7 +194,7 @@ function CertificationView({ streak, totalDays, bestStreak, image, subjugation }
         <SummaryCard label="さいちょう記録" value={bestStreak} unit="日" tone="bg-cheek" />
       </div>
 
-      <SubjugationCard subjugation={subjugation} />
+      <SubjugationCard subjugation={subjugation} image={subjugationImage} />
 
       <Road totalDays={totalDays} next={next} />
 

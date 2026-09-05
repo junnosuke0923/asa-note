@@ -75,6 +75,7 @@ export const DECORATION_SLOTS = [
   { id: 'badge', label: '検定の賞状', hint: '賞状のまんなか（草のかわり）' },
   { id: 'empty', label: 'グラフが空のとき', hint: 'まだ記録がないときの絵' },
   { id: 'settings', label: 'せってい', hint: '設定の見出しに出る絵' },
+  { id: 'subjugation', label: '討伐のカード', hint: '「討伐した日」の横に出る絵' },
 ]
 
 export async function loadDecorations() {

@@ -1,4 +1,5 @@
 import { describeSubjugation, SUBJUGATION_KINDS } from '../lib/subjugation'
+import AppImage from './AppImage'
 import Icon from './Icon'
 import TinyChara from './TinyChara'
 
@@ -12,13 +13,28 @@ import TinyChara from './TinyChara'
  * 討伐は減らない。しんどい時期を越えたことは、
  * あとから無かったことにはならないため。
  */
-function SubjugationCard({ subjugation }) {
+function SubjugationCard({ subjugation, image }) {
   const { total, byKind } = subjugation
 
   return (
     <div className="ink-line blob-a sticker-shadow bg-paper px-4 py-3">
       <div className="flex items-center gap-2">
-        <TinyChara pose="proud" size={30} />
+        {/*
+          差し替えできる絵。ほかの画面と同じく、高さだけ決めて
+          幅は絵の形にまかせる（横長の絵が 小さく見えてしまわないように）。
+
+          ただし ここは 絵・日数・ひとことが 横一列に並ぶ狭い場所なので、
+          幅に上限を置く。上限が無いと 横長の絵が 日数を押しつぶす。
+          幅の広い端末では 上限をゆるめる。
+        */}
+        <div className="flex h-[56px] shrink-0 items-center justify-center [@media(min-width:420px)]:h-[68px]">
+          <AppImage
+            src={image}
+            size={68}
+            sizeClass="h-full w-auto max-w-[96px] [@media(min-width:420px)]:max-w-[128px]"
+            fallback={<TinyChara pose="proud" size={44} />}
+          />
+        </div>
         <div className="min-w-0 flex-1">
           <p className="text-[11px] font-black text-ink-soft">討伐した日</p>
           <p className="leading-none font-black">

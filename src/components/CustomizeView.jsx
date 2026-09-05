@@ -10,6 +10,7 @@ import AskModal from './AskModal'
 import GrowingPlant from './GrowingPlant'
 import Icon from './Icon'
 import Sprout from './Sprout'
+import TinyChara from './TinyChara'
 
 /* 差し替えていないときに出る、もとの絵 */
 const FALLBACKS = {
@@ -19,6 +20,7 @@ const FALLBACKS = {
   badge: <GrowingPlant totalDays={45} size={66} />,
   empty: <Sprout size={52} />,
   settings: <Icon name="sliders" size={44} />,
+  subjugation: <TinyChara pose="proud" size={52} />,
 }
 
 /** 画像を1枚えらぶボタン。取り込みと縮小はここで面倒を見る */

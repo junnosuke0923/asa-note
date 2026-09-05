@@ -262,6 +262,7 @@ function App() {
             bestStreak={calcBestStreak(records)}
             image={assets.decorations.badge}
             subjugation={getSubjugations(records, treatments)}
+            subjugationImage={assets.decorations.subjugation}
           />
         )}
 
